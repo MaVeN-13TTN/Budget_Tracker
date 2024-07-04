@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block title %}Add Income{% endblock %} {% block
+content %}
+<h1>Add Income</h1>
+<form method="POST" action="{{ url_for('add_income') }}" id="income-form">
+  {{ form.hidden_tag() }}
+  <p>
+    {{ form.amount.label }}<br />
+    {{ form.amount(size=32, type="number", step="0.01", min="0") }}<br />
+    {% for error in form.amount.errors %}
+    <span class="error">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.source.label }}<br />
+    {{ form.source(size=32) }}<br />
+    {% for error in form.source.errors %}
+    <span class="error">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.date.label }}<br />
+    {{ form.date(type="date") }}<br />
+    {% for error in form.date.errors %}
+    <span class="error">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>{{ form.submit(class="btn") }}</p>
+</form>
+{% endblock %}

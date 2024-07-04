@@ -1,0 +1,118 @@
+:root {
+    --oxford-blue: #0b132bff;
+    --space-cadet: #1c2541ff;
+    --yinmn-blue: #3a506bff;
+    --verdigris: #5bc0beff;
+    --fluorescent-cyan: #6fffe9ff;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--oxford-blue);
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+    padding: 0 20px;
+}
+
+header {
+    background-color: var(--oxford-blue);
+    color: var(--fluorescent-cyan);
+    padding-top: 30px;
+    min-height: 70px;
+    border-bottom: var(--verdigris) 3px solid;
+}
+
+header a {
+    color: var(--fluorescent-cyan);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+
+header ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+header li {
+    display: inline;
+    padding: 0 20px 0 20px;
+}
+
+header #branding {
+    float: left;
+}
+
+header #branding h1 {
+    margin: 0;
+}
+
+header nav {
+    float: right;
+    margin-top: 10px;
+}
+
+.btn {
+    display: inline-block;
+    background: var(--verdigris);
+    color: var(--oxford-blue);
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: var(--fluorescent-cyan);
+}
+
+form {
+    background: var(--space-cadet);
+    color: var(--fluorescent-cyan);
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+.flash {
+    padding: 10px;
+    background: var(--verdigris);
+    color: var(--oxford-blue);
+    margin: 10px 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--yinmn-blue);
+}
+
+th {
+    background-color: var(--space-cadet);
+    color: var(--fluorescent-cyan);
+}
+
+.chart-container {
+    width: 80%;
+    margin: 20px auto;
+}
