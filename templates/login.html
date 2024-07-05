@@ -1,22 +1,27 @@
 {% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
 %}
-<h1>Login</h1>
-<form method="POST" action="{{ url_for('login') }}" id="login-form">
-  {{ form.hidden_tag() }}
-  <div>
-    {{ form.username.label }} {{ form.username(size=32) }} {% for error in
-    form.username.errors %}
-    <span class="error">{{ error }}</span>
-    {% endfor %}
-  </div>
-  <div>
-    {{ form.password.label }} {{ form.password(size=32) }} {% for error in
-    form.password.errors %}
-    <span class="error">{{ error }}</span>
-    {% endfor %}
-  </div>
-  <div>{{ form.remember_me() }} {{ form.remember_me.label }}</div>
-  <div>{{ form.submit(class="btn") }}</div>
-</form>
-<p>New user? <a href="{{ url_for('register') }}">Register here</a></p>
+<div class="card auth-form">
+  <h1><i data-feather="log-in"></i> Login</h1>
+  <form method="POST" action="{{ url_for('login') }}" id="login-form">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+      {{ form.username.label }} {{ form.username(size=32, class="form-control")
+      }} {% for error in form.username.errors %}
+      <span class="error">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div class="form-group">
+      {{ form.password.label }} {{ form.password(size=32, class="form-control")
+      }} {% for error in form.password.errors %}
+      <span class="error">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div class="form-group">
+      {{ form.remember_me(class="form-check-input") }} {{ form.remember_me.label
+      }}
+    </div>
+    <div class="form-group">{{ form.submit(class="btn btn-primary") }}</div>
+  </form>
+  <p>New user? <a href="{{ url_for('register') }}">Register here</a></p>
+</div>
 {% endblock %}

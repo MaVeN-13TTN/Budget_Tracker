@@ -1,135 +1,188 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
-<h1>Welcome to Budget Tracker</h1>
-{% if current_user.is_authenticated %}
-<h2>Hello, {{ current_user.username }}!</h2>
-<div id="summary">
-  <h3>Financial Summary</h3>
-  <p>Total Income: $<span id="total-income"></span></p>
-  <p>Total Expenses: $<span id="total-expenses"></span></p>
-  <p>Balance: $<span id="balance"></span></p>
+<div class="container">
+  <h1 class="mt-4">Welcome to Budget Tracker</h1>
+  {% if current_user.is_authenticated %}
+  <h2>Hello, {{ current_user.username }}!</h2>
+  <div class="dashboard mt-4">
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="card summary h-100" id="summary">
+          <div class="card-body">
+            <h3 class="card-title">Financial Summary</h3>
+            <p class="card-text">
+              Total Income: $<span id="total-income"></span>
+            </p>
+            <p class="card-text">
+              Total Expenses: $<span id="total-expenses"></span>
+            </p>
+            <p class="card-text">Balance: $<span id="balance"></span></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="card-title">Expense Distribution</h3>
+            <div class="chart-container">
+              <canvas id="expense-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="card-title">Spending Patterns</h3>
+            <div class="chart-container">
+              <canvas id="spending-pattern-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="card-title">Recent Transactions</h3>
+            <table id="recent-transactions" class="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>Amount</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Transactions will be populated here by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card mt-4">
+    <div class="card-body">
+      <h3 class="card-title">Income Management</h3>
+      <a href="{{ url_for('add_income') }}" class="btn btn-primary mb-3">
+        <i data-feather="plus"></i> Add New Income
+      </a>
+      <table id="income-table" class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Source</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for income in incomes %}
+          <tr>
+            <td>{{ income.date.strftime('%Y-%m-%d') }}</td>
+            <td>${{ "%.2f"|format(income.amount) }}</td>
+            <td>{{ income.source }}</td>
+            <td>
+              <a
+                href="{{ url_for('edit_income', income_id=income.id) }}"
+                class="btn btn-sm btn-primary"
+              >
+                <i data-feather="edit"></i> Edit
+              </a>
+              <form
+                action="{{ url_for('delete_income', income_id=income.id) }}"
+                method="POST"
+                class="d-inline"
+              >
+                <button
+                  type="submit"
+                  class="btn btn-sm btn-danger"
+                  onclick="return confirm('Are you sure you want to delete this income?');"
+                >
+                  <i data-feather="trash-2"></i> Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card mt-4">
+    <div class="card-body">
+      <h3 class="card-title">Expense Management</h3>
+      <a href="{{ url_for('add_expense') }}" class="btn btn-primary mb-3">
+        <i data-feather="plus"></i> Add New Expense
+      </a>
+      <table id="expense-table" class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for expense in expenses %}
+          <tr>
+            <td>{{ expense.date.strftime('%Y-%m-%d') }}</td>
+            <td>${{ "%.2f"|format(expense.amount) }}</td>
+            <td>{{ expense.description }}</td>
+            <td>{{ expense.category.name }}</td>
+            <td>
+              <a
+                href="{{ url_for('edit_expense', expense_id=expense.id) }}"
+                class="btn btn-sm btn-primary"
+              >
+                <i data-feather="edit"></i> Edit
+              </a>
+              <form
+                action="{{ url_for('delete_expense', expense_id=expense.id) }}"
+                method="POST"
+                class="d-inline"
+              >
+                <button
+                  type="submit"
+                  class="btn btn-sm btn-danger"
+                  onclick="return confirm('Are you sure you want to delete this expense?');"
+                >
+                  <i data-feather="trash-2"></i> Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card mt-4">
+    <div class="card-body">
+      <h3 class="card-title">Budget Management</h3>
+      <a href="{{ url_for('set_budget_limit') }}" class="btn btn-primary">
+        <i data-feather="sliders"></i> Set Budget Limits
+      </a>
+    </div>
+  </div>
+  <div class="card mt-4">
+    <div class="card-body">
+      <h3 class="card-title">Data Export</h3>
+      <a href="{{ url_for('export_data') }}" class="btn btn-primary">
+        <i data-feather="download"></i> Export Financial Data
+      </a>
+    </div>
+  </div>
+  {% else %}
+  <p class="mt-4">
+    Please <a href="{{ url_for('login') }}">log in</a> to view your budget
+    information.
+  </p>
+  {% endif %}
 </div>
-
-<div id="budget-alerts"></div>
-
-<div class="chart-container">
-  <h3>Expense Distribution</h3>
-  <canvas id="expense-chart"></canvas>
-</div>
-
-<div class="chart-container">
-  <h3>Spending Patterns</h3>
-  <canvas id="spending-pattern-chart"></canvas>
-</div>
-
-<h3>Recent Transactions</h3>
-<table id="recent-transactions">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Type</th>
-      <th>Amount</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Transactions will be populated here by JavaScript -->
-  </tbody>
-</table>
-
-<h3>Income Management</h3>
-<a href="{{ url_for('add_income') }}" class="btn">Add New Income</a>
-<table id="income-table">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Amount</th>
-      <th>Source</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for income in incomes %}
-    <tr>
-      <td>{{ income.date.strftime('%Y-%m-%d') }}</td>
-      <td>${{ "%.2f"|format(income.amount) }}</td>
-      <td>{{ income.source }}</td>
-      <td>
-        <a
-          href="{{ url_for('edit_income', income_id=income.id) }}"
-          class="btn btn-small"
-          >Edit</a
-        >
-        <form
-          style="display: inline"
-          action="{{ url_for('delete_income', income_id=income.id) }}"
-          method="POST"
-        >
-          <input
-            type="submit"
-            value="Delete"
-            class="btn btn-small btn-danger"
-            onclick="return confirm('Are you sure you want to delete this income?');"
-          />
-        </form>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<h3>Expense Management</h3>
-<a href="{{ url_for('add_expense') }}" class="btn">Add New Expense</a>
-<table id="expense-table">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Amount</th>
-      <th>Description</th>
-      <th>Category</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for expense in expenses %}
-    <tr>
-      <td>{{ expense.date.strftime('%Y-%m-%d') }}</td>
-      <td>${{ "%.2f"|format(expense.amount) }}</td>
-      <td>{{ expense.description }}</td>
-      <td>{{ expense.category.name }}</td>
-      <td>
-        <a
-          href="{{ url_for('edit_expense', expense_id=expense.id) }}"
-          class="btn btn-small"
-          >Edit</a
-        >
-        <form
-          style="display: inline"
-          action="{{ url_for('delete_expense', expense_id=expense.id) }}"
-          method="POST"
-        >
-          <input
-            type="submit"
-            value="Delete"
-            class="btn btn-small btn-danger"
-            onclick="return confirm('Are you sure you want to delete this expense?');"
-          />
-        </form>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<h3>Budget Management</h3>
-<a href="{{ url_for('set_budget_limit') }}" class="btn">Set Budget Limits</a>
-
-<h3>Data Export</h3>
-<a href="{{ url_for('export_data') }}" class="btn">Export Financial Data</a>
-
-{% else %}
-<p>
-  Please <a href="{{ url_for('login') }}">log in</a> to view your budget
-  information.
-</p>
-{% endif %} {% endblock %}
+{% endblock %}
