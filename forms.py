@@ -10,6 +10,7 @@ from wtforms import (
     DateField,
     SelectField,
 )
+from wtforms.validators import NumberRange
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from models.budget import User
 
@@ -48,19 +49,27 @@ class RegistrationForm(FlaskForm):
 
 
 class IncomeForm(FlaskForm):
-    """Form for adding income."""
+    """Form for setting budget limits."""
 
     amount = FloatField("Amount", validators=[DataRequired()])
     source = StringField("Source", validators=[DataRequired()])
     date = DateField("Date", validators=[DataRequired()])
-    submit = SubmitField("Add Income")
+    submit = SubmitField("Save Income")
 
 
 class ExpenseForm(FlaskForm):
-    """Form for adding expenses."""
+    """Form for adding,editing and deleting expenses."""
 
     amount = FloatField("Amount", validators=[DataRequired()])
     description = StringField("Description", validators=[DataRequired()])
     category = SelectField("Category", coerce=int, validators=[DataRequired()])
     date = DateField("Date", validators=[DataRequired()])
-    submit = SubmitField("Add Expense")
+    submit = SubmitField("Save Expense")
+
+
+class BudgetLimitForm(FlaskForm):
+    """Form for adding, editing and deleting budget limits."""
+
+    category = SelectField("Category", coerce=int, validators=[DataRequired()])
+    amount = FloatField("Limit Amount", validators=[DataRequired(), NumberRange(min=0)])
+    submit = SubmitField("Set Limit")

@@ -53,3 +53,18 @@ class Expense(db.Model):
     date = db.Column(db.Date, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
+
+
+class BudgetLimit(db.Model):
+    """Represents a budget limit set by a user for a specific category."""
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+
+    user = db.relationship("User", backref="budget_limits")
+    category = db.relationship("Category", backref="budget_limit")
+
+    def __repr__(self):
+        return f"<BudgetLimit {self.id}: {self.category.name} - ${self.amount}>"
