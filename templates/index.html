@@ -23,6 +23,30 @@
       <div class="col-md-6 mb-4">
         <div class="card h-100">
           <div class="card-body">
+            <h3 class="card-title">Recent Transactions</h3>
+            <div class="table-responsive">
+              <table id="recent-transactions" class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Transactions will be populated here by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
             <h3 class="card-title">Expense Distribution</h3>
             <div class="chart-container">
               <canvas id="expense-chart"></canvas>
@@ -30,8 +54,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
       <div class="col-md-6 mb-4">
         <div class="card h-100">
           <div class="card-body">
@@ -42,21 +64,109 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6 mb-4">
-        <div class="card h-100">
-          <div class="card-body">
-            <h3 class="card-title">Recent Transactions</h3>
-            <table id="recent-transactions" class="table">
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Income Management</h3>
+          <a href="{{ url_for('add_income') }}" class="btn btn-primary mb-3">
+            <i data-feather="plus"></i> Add New Income
+          </a>
+          <div class="table-responsive">
+            <table id="income-table" class="table table-sm">
               <thead>
                 <tr>
                   <th>Date</th>
-                  <th>Type</th>
                   <th>Amount</th>
-                  <th>Description</th>
+                  <th>Source</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <!-- Transactions will be populated here by JavaScript -->
+                {% for income in incomes %}
+                <tr>
+                  <td>{{ income.date.strftime('%Y-%m-%d') }}</td>
+                  <td>${{ "%.2f"|format(income.amount) }}</td>
+                  <td>{{ income.source }}</td>
+                  <td>
+                    <a
+                      href="{{ url_for('edit_income', income_id=income.id) }}"
+                      class="btn btn-sm btn-primary"
+                    >
+                      <i data-feather="edit"></i> Edit
+                    </a>
+                    <form
+                      action="{{ url_for('delete_income', income_id=income.id) }}"
+                      method="POST"
+                      class="d-inline"
+                    >
+                      <button
+                        type="submit"
+                        class="btn btn-sm btn-danger"
+                        onclick="return confirm('Are you sure you want to delete this income?');"
+                      >
+                        <i data-feather="trash-2"></i> Delete
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Expense Management</h3>
+          <a href="{{ url_for('add_expense') }}" class="btn btn-primary mb-3">
+            <i data-feather="plus"></i> Add New Expense
+          </a>
+          <div class="table-responsive">
+            <table id="expense-table" class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Description</th>
+                  <th>Category</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for expense in expenses %}
+                <tr>
+                  <td>{{ expense.date.strftime('%Y-%m-%d') }}</td>
+                  <td>${{ "%.2f"|format(expense.amount) }}</td>
+                  <td>{{ expense.description }}</td>
+                  <td>{{ expense.category.name }}</td>
+                  <td>
+                    <a
+                      href="{{ url_for('edit_expense', expense_id=expense.id) }}"
+                      class="btn btn-sm btn-primary"
+                    >
+                      <i data-feather="edit"></i> Edit
+                    </a>
+                    <form
+                      action="{{ url_for('delete_expense', expense_id=expense.id) }}"
+                      method="POST"
+                      class="d-inline"
+                    >
+                      <button
+                        type="submit"
+                        class="btn btn-sm btn-danger"
+                        onclick="return confirm('Are you sure you want to delete this expense?');"
+                      >
+                        <i data-feather="trash-2"></i> Delete
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>
@@ -64,118 +174,26 @@
       </div>
     </div>
   </div>
-  <div class="card mt-4">
-    <div class="card-body">
-      <h3 class="card-title">Income Management</h3>
-      <a href="{{ url_for('add_income') }}" class="btn btn-primary mb-3">
-        <i data-feather="plus"></i> Add New Income
-      </a>
-      <table id="income-table" class="table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Amount</th>
-            <th>Source</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for income in incomes %}
-          <tr>
-            <td>{{ income.date.strftime('%Y-%m-%d') }}</td>
-            <td>${{ "%.2f"|format(income.amount) }}</td>
-            <td>{{ income.source }}</td>
-            <td>
-              <a
-                href="{{ url_for('edit_income', income_id=income.id) }}"
-                class="btn btn-sm btn-primary"
-              >
-                <i data-feather="edit"></i> Edit
-              </a>
-              <form
-                action="{{ url_for('delete_income', income_id=income.id) }}"
-                method="POST"
-                class="d-inline"
-              >
-                <button
-                  type="submit"
-                  class="btn btn-sm btn-danger"
-                  onclick="return confirm('Are you sure you want to delete this income?');"
-                >
-                  <i data-feather="trash-2"></i> Delete
-                </button>
-              </form>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+  <div class="row mt-4">
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Budget Management</h3>
+          <a href="{{ url_for('set_budget_limit') }}" class="btn btn-primary">
+            <i data-feather="sliders"></i> Set Budget Limits
+          </a>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="card mt-4">
-    <div class="card-body">
-      <h3 class="card-title">Expense Management</h3>
-      <a href="{{ url_for('add_expense') }}" class="btn btn-primary mb-3">
-        <i data-feather="plus"></i> Add New Expense
-      </a>
-      <table id="expense-table" class="table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Amount</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for expense in expenses %}
-          <tr>
-            <td>{{ expense.date.strftime('%Y-%m-%d') }}</td>
-            <td>${{ "%.2f"|format(expense.amount) }}</td>
-            <td>{{ expense.description }}</td>
-            <td>{{ expense.category.name }}</td>
-            <td>
-              <a
-                href="{{ url_for('edit_expense', expense_id=expense.id) }}"
-                class="btn btn-sm btn-primary"
-              >
-                <i data-feather="edit"></i> Edit
-              </a>
-              <form
-                action="{{ url_for('delete_expense', expense_id=expense.id) }}"
-                method="POST"
-                class="d-inline"
-              >
-                <button
-                  type="submit"
-                  class="btn btn-sm btn-danger"
-                  onclick="return confirm('Are you sure you want to delete this expense?');"
-                >
-                  <i data-feather="trash-2"></i> Delete
-                </button>
-              </form>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="card mt-4">
-    <div class="card-body">
-      <h3 class="card-title">Budget Management</h3>
-      <a href="{{ url_for('set_budget_limit') }}" class="btn btn-primary">
-        <i data-feather="sliders"></i> Set Budget Limits
-      </a>
-    </div>
-  </div>
-  <div class="card mt-4">
-    <div class="card-body">
-      <h3 class="card-title">Data Export</h3>
-      <a href="{{ url_for('export_data') }}" class="btn btn-primary">
-        <i data-feather="download"></i> Export Financial Data
-      </a>
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Data Export</h3>
+          <a href="{{ url_for('export_data') }}" class="btn btn-primary">
+            <i data-feather="download"></i> Export Financial Data
+          </a>
+        </div>
+      </div>
     </div>
   </div>
   {% else %}

@@ -13,68 +13,93 @@
     <script src="https://unpkg.com/feather-icons"></script>
   </head>
   <body>
-    <header>
-      <div class="container">
-        <div id="branding">
-          <h1><i data-feather="dollar-sign"></i> Budget Tracker</h1>
+    <div class="page-container">
+      <header>
+        <div class="container header-container">
+          <div id="branding">
+            <h1><i data-feather="dollar-sign"></i> Budget Tracker</h1>
+          </div>
+          <div class="hamburger" id="hamburger-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <nav id="nav-menu">
+            <ul>
+              <li>
+                <a href="{{ url_for('index') }}"
+                  ><i data-feather="home"></i> Home</a
+                >
+              </li>
+              {% if current_user.is_authenticated %}
+              <li>
+                <a href="{{ url_for('add_income') }}"
+                  ><i data-feather="plus-circle"></i> Add Income</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('add_expense') }}"
+                  ><i data-feather="minus-circle"></i> Add Expense</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('set_budget_limit') }}"
+                  ><i data-feather="sliders"></i> Budget Limits</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('reports') }}"
+                  ><i data-feather="bar-chart-2"></i> Reports</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('logout') }}"
+                  ><i data-feather="log-out"></i> Logout</a
+                >
+              </li>
+              {% else %}
+              <li>
+                <a href="{{ url_for('login') }}"
+                  ><i data-feather="log-in"></i> Login</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('register') }}"
+                  ><i data-feather="user-plus"></i> Register</a
+                >
+              </li>
+              {% endif %}
+            </ul>
+          </nav>
         </div>
-        <nav>
-          <ul>
-            <li>
-              <a href="{{ url_for('index') }}"
-                ><i data-feather="home"></i> Home</a
-              >
-            </li>
-            {% if current_user.is_authenticated %}
-            <li>
-              <a href="{{ url_for('add_income') }}"
-                ><i data-feather="plus-circle"></i> Add Income</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('add_expense') }}"
-                ><i data-feather="minus-circle"></i> Add Expense</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('reports') }}"
-                ><i data-feather="bar-chart-2"></i> Reports</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('logout') }}"
-                ><i data-feather="log-out"></i> Logout</a
-              >
-            </li>
-            {% else %}
-            <li>
-              <a href="{{ url_for('login') }}"
-                ><i data-feather="log-in"></i> Login</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('register') }}"
-                ><i data-feather="user-plus"></i> Register</a
-              >
-            </li>
-            {% endif %}
-          </ul>
-        </nav>
-      </div>
-    </header>
-    <div class="container">
-      {% with messages = get_flashed_messages() %} {% if messages %} {% for
-      message in messages %}
-      <div class="flash">{{ message }}</div>
-      {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
+      </header>
+      <main class="content">
+        <div class="container">
+          {% with messages = get_flashed_messages() %} {% if messages %} {% for
+          message in messages %}
+          <div class="flash">{{ message }}</div>
+          {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock
+          %}
+        </div>
+      </main>
+      <footer>
+        <div class="container">
+          <p>&copy; 2024 Budget Tracker. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
-    <footer>
-      <div class="container">
-        <p>&copy; 2024 Budget Tracker. All rights reserved.</p>
-      </div>
-    </footer>
     <script>
       feather.replace();
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const hamburger = document.getElementById("hamburger-menu");
+        const nav = document.getElementById("nav-menu");
+
+        hamburger.addEventListener("click", function () {
+          nav.classList.toggle("active");
+          hamburger.classList.toggle("active");
+        });
+      });
     </script>
   </body>
 </html>

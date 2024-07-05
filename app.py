@@ -122,6 +122,33 @@ def add_income():
     return render_template("income.html", title="Add Income", form=form)
 
 
+def check_budget_limit(user, category_id, amount):
+    """Check if an expense is within the set budget limit."""
+    budget_limit = BudgetLimit.query.filter_by(
+        user_id=user.id, category_id=category_id
+    ).first()
+    if not budget_limit:
+        return True, None  # No limit set, allow expense
+
+    current_month = datetime.now().replace(
+        day=1, hour=0, minute=0, second=0, microsecond=0
+    )
+    total_expenses = (
+        db.session.query(func.sum(Expense.amount))
+        .filter(
+            Expense.user_id == user.id,
+            Expense.category_id == category_id,
+            Expense.date >= current_month,
+        )
+        .scalar()
+        or 0
+    )
+
+    if total_expenses + amount > budget_limit.amount:
+        return False, budget_limit.amount
+    return True, None
+
+
 @app.route("/add_expense", methods=["GET", "POST"])
 @login_required
 def add_expense():
@@ -129,12 +156,23 @@ def add_expense():
     form = ExpenseForm()
     form.category.choices = [(c.id, c.name) for c in Category.query.order_by("name")]
     if form.validate_on_submit():
+        within_limit, limit = check_budget_limit(
+            current_user, form.category.data, form.amount.data
+        )
+        if not within_limit:
+            flash(
+                f"This expense exceeds your budget limit of ${limit:.2f}. "
+                "Please adjust your expense or update your budget limit.",
+                "warning",
+            )
+            return render_template("expenses.html", title="Add Expense", form=form)
+
         expense = Expense(
             amount=form.amount.data,
             description=form.description.data,
             date=form.date.data,
             category_id=form.category.data,
-            user=current_user,
+            user_id=current_user.id,
         )
         db.session.add(expense)
         db.session.commit()
@@ -557,6 +595,24 @@ def check_budget_alerts():
             )
 
     return jsonify(alerts)
+
+
+# Add this new route to app.py
+@app.route("/api/check_budget_limit", methods=["POST"])
+@login_required
+def api_check_budget_limit():
+    """API endpoint to check budget limit before adding an expense."""
+    data = request.json
+    category_id = data.get("category_id")
+    amount = data.get("amount")
+
+    if not category_id or not amount:
+        return jsonify({"error": "Missing category_id or amount"}), 400
+
+    within_limit, limit = check_budget_limit(current_user, category_id, float(amount))
+    return jsonify(
+        {"within_limit": within_limit, "limit": float(limit) if limit else None}
+    )
 
 
 @app.route("/export_data")

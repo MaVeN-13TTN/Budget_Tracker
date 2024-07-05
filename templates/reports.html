@@ -1,43 +1,67 @@
 {% extends "base.html" %} {% block title %}Financial Reports{% endblock %} {%
 block content %}
-<h1><i data-feather="bar-chart-2"></i> Financial Reports</h1>
-<div class="card">
-  <div id="date-range" class="form-inline mb-3">
-    <label for="start-date" class="mr-2">Start Date:</label>
-    <input type="date" id="start-date" class="form-control mr-3" />
-    <label for="end-date" class="mr-2">End Date:</label>
-    <input type="date" id="end-date" class="form-control mr-3" />
-    <button id="update-report" class="btn btn-primary">
-      <i data-feather="refresh-cw"></i> Update Report
-    </button>
-  </div>
-  <div id="summary">
-    <h2><i data-feather="clipboard"></i> Summary</h2>
-    <p>Total Income: $<span id="report-total-income"></span></p>
-    <p>Total Expenses: $<span id="report-total-expenses"></span></p>
-    <p>Net Income: $<span id="report-net-income"></span></p>
-  </div>
-  <div class="chart-container mt-4">
-    <canvas id="expense-category-chart"></canvas>
-  </div>
-</div>
+<div class="container mt-4">
+  <h1><i data-feather="bar-chart-2"></i> Financial Reports</h1>
 
-<div class="card mt-4">
-  <h2><i data-feather="list"></i> Transactions</h2>
-  <table id="transactions" class="table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Type</th>
-        <th>Amount</th>
-        <th>Description</th>
-        <th>Category</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Transactions will be populated here by JavaScript -->
-    </tbody>
-  </table>
+  <div class="card mb-4">
+    <div class="card-body">
+      <div id="date-range" class="form-inline">
+        <label for="start-date" class="mr-2">Start Date:</label>
+        <input type="date" id="start-date" class="form-control mr-3" />
+        <label for="end-date" class="mr-2">End Date:</label>
+        <input type="date" id="end-date" class="form-control mr-3" />
+        <button id="update-report" class="btn btn-primary">
+          <i data-feather="refresh-cw"></i> Update Report
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-body">
+          <div id="summary">
+            <h2><i data-feather="clipboard"></i> Summary</h2>
+            <p>Total Income: $<span id="report-total-income"></span></p>
+            <p>Total Expenses: $<span id="report-total-expenses"></span></p>
+            <p>Net Income: $<span id="report-net-income"></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="chart-container">
+            <canvas id="expense-category-chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h2><i data-feather="list"></i> Transactions</h2>
+      <div class="table-responsive">
+        <table id="transactions" class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Description</th>
+              <th>Category</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Transactions will be populated here by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
