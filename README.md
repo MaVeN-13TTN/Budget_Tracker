@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Budget Tracker is a web application designed to help users manage their finances and track expenses. It provides a user-friendly platform for tracking income, expenses, and savings while offering tools to set and manage budget limits for different categories.
+Budget Tracker is a web application designed to help users manage their finances and track expenses. It provides a user-friendly platform for tracking income, expenses while offering tools to set and manage budget limits for different categories.
 
 ## Features
 
@@ -38,7 +38,7 @@ Budget Tracker is a web application designed to help users manage their finances
 1. Clone the repository:
 
    ```
-   git clone https://github.com/yourusername/budget-tracker.git
+   git clone https://github.com/MaVeN-13TTN/budget-tracker.git
    cd budget-tracker
    ```
 
@@ -67,7 +67,7 @@ Budget Tracker is a web application designed to help users manage their finances
      FLASK_APP=app.py
      FLASK_ENV=development
      DATABASE_URL=mysql://username:password@localhost/budget_tracker
-     SECRET_KEY=your_secret_key_here
+     SECRET_KEY=your_secret_key_here #can be genereted using the keys.py file
      ```
 
 6. Initialize the database:
@@ -102,12 +102,15 @@ budget_tracker/
 │       └── main.js
 ├── templates/
 │   ├── base.html
-│   ├── index.html
-│   ├── income.html
+│   ├── edit_expense.html
+│   ├── edit_income.html
 │   ├── expenses.html
-│   ├── reports.html
+│   ├── income.html
+│   ├── index.html
 │   ├── login.html
-│   └── register.html
+│   ├── register.html
+│   ├── reports.html
+│   └── set_budget_limit.html
 ├── requirements.txt
 └── README.md
 ```
