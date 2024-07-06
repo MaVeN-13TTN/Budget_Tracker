@@ -23,9 +23,9 @@ block content %}
         <div class="card-body">
           <div id="summary">
             <h2><i data-feather="clipboard"></i> Summary</h2>
-            <p>Total Income: $<span id="report-total-income"></span></p>
-            <p>Total Expenses: $<span id="report-total-expenses"></span></p>
-            <p>Net Income: $<span id="report-net-income"></span></p>
+            <p>Total Income: <span id="report-total-income"></span></p>
+            <p>Total Expenses: <span id="report-total-expenses"></span></p>
+            <p>Net Income: <span id="report-net-income"></span></p>
           </div>
         </div>
       </div>
@@ -68,6 +68,16 @@ block content %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   $(document).ready(function () {
+    function formatKSH(amount) {
+      return (
+        "KSH " +
+        parseFloat(amount).toLocaleString("en-KE", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      );
+    }
+
     function fetchReportData() {
       var startDate = $("#start-date").val();
       var endDate = $("#end-date").val();
@@ -76,9 +86,9 @@ block content %}
         "/api/report_data",
         { start_date: startDate, end_date: endDate },
         function (data) {
-          $("#report-total-income").text(data.total_income);
-          $("#report-total-expenses").text(data.total_expenses);
-          $("#report-net-income").text(data.net_income);
+          $("#report-total-income").text(formatKSH(data.total_income));
+          $("#report-total-expenses").text(formatKSH(data.total_expenses));
+          $("#report-net-income").text(formatKSH(data.net_income));
 
           var transactionsTable = $("#transactions tbody");
           transactionsTable.empty();
@@ -92,7 +102,7 @@ block content %}
               transaction.type +
               "</td>" +
               "<td>" +
-              transaction.amount +
+              formatKSH(transaction.amount) +
               "</td>" +
               "<td>" +
               transaction.description +
@@ -135,7 +145,34 @@ block content %}
               responsive: true,
               title: {
                 display: true,
-                text: "Expenses by Category",
+                text: "Expenses by Category (KSH)",
+              },
+              tooltips: {
+                callbacks: {
+                  label: function (tooltipItem, data) {
+                    var dataset = data.datasets[tooltipItem.datasetIndex];
+                    var total = dataset.data.reduce(function (
+                      previousValue,
+                      currentValue,
+                      currentIndex,
+                      array
+                    ) {
+                      return previousValue + currentValue;
+                    });
+                    var currentValue = dataset.data[tooltipItem.index];
+                    var percentage = Math.floor(
+                      (currentValue / total) * 100 + 0.5
+                    );
+                    return (
+                      data.labels[tooltipItem.index] +
+                      ": " +
+                      formatKSH(currentValue) +
+                      " (" +
+                      percentage +
+                      "%)"
+                    );
+                  },
+                },
               },
             },
           });

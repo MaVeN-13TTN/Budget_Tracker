@@ -60,11 +60,11 @@ function fetchSummaryData() {
     .then((data) => {
       document.getElementById(
         "total-income"
-      ).textContent = `$${data.total_income.toFixed(2)}`;
+      ).textContent = `KSH ${data.total_income.toFixed(2)}`;
       document.getElementById(
         "total-expenses"
-      ).textContent = `$${data.total_expenses.toFixed(2)}`;
-      document.getElementById("balance").textContent = `$${(
+      ).textContent = `KSH ${data.total_expenses.toFixed(2)}`;
+      document.getElementById("balance").textContent = `KSH ${(
         data.total_income - data.total_expenses
       ).toFixed(2)}`;
 
@@ -85,7 +85,7 @@ function fetchRecentTransactions() {
           transaction.date
         ).toLocaleDateString();
         row.insertCell(1).textContent = transaction.type;
-        row.insertCell(2).textContent = `$${transaction.amount.toFixed(2)}`;
+        row.insertCell(2).textContent = `KSH ${transaction.amount.toFixed(2)}`;
         row.insertCell(3).textContent = transaction.description;
       });
     })
@@ -144,17 +144,17 @@ function updateReport() {
       if (data.total_income !== undefined) {
         document.getElementById(
           "report-total-income"
-        ).textContent = `$${parseFloat(data.total_income).toFixed(2)}`;
+        ).textContent = `KSH ${parseFloat(data.total_income).toFixed(2)}`;
       }
       if (data.total_expenses !== undefined) {
         document.getElementById(
           "report-total-expenses"
-        ).textContent = `$${parseFloat(data.total_expenses).toFixed(2)}`;
+        ).textContent = `KSH ${parseFloat(data.total_expenses).toFixed(2)}`;
       }
       if (data.net_income !== undefined) {
         document.getElementById(
           "report-net-income"
-        ).textContent = `$${parseFloat(data.net_income).toFixed(2)}`;
+        ).textContent = `KSH ${parseFloat(data.net_income).toFixed(2)}`;
       }
 
       // Update transactions table
@@ -191,6 +191,7 @@ function updateReport() {
       }
     });
 }
+
 function updateExpenseCategoryChart(categories) {
   const ctx = document.getElementById("expense-category-chart");
   if (!ctx) {
@@ -262,7 +263,7 @@ function populateTransactionsTable(transactions) {
       transaction.date
     ).toLocaleDateString();
     row.insertCell(1).textContent = transaction.type;
-    row.insertCell(2).textContent = `$${transaction.amount.toFixed(2)}`;
+    row.insertCell(2).textContent = `KSH ${transaction.amount.toFixed(2)}`;
     row.insertCell(3).textContent = transaction.description;
     row.insertCell(4).textContent = transaction.category || "-";
   });
@@ -376,7 +377,7 @@ function createSpendingPatternChart() {
               beginAtZero: true,
               title: {
                 display: true,
-                text: "Amount ($)",
+                text: "Amount (KSH)",
               },
             },
           },
@@ -416,9 +417,9 @@ function checkBudgetAlerts() {
         alertElement.className = "alert alert-warning";
         alertElement.textContent =
           `Warning: You've exceeded your budget for ${alert.category}. ` +
-          `Limit: $${alert.limit.toFixed(2)}, Spent: $${alert.spent.toFixed(
+          `Limit: KSH ${alert.limit.toFixed(
             2
-          )} ` +
+          )}, Spent: KSH ${alert.spent.toFixed(2)} ` +
           `(${alert.percentage.toFixed(1)}%)`;
         alertContainer.appendChild(alertElement);
       });

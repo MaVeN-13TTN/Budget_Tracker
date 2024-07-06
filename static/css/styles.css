@@ -1,14 +1,24 @@
 /* Global Styles and Variables */
 :root {
-    --primary-color: #495057ff; /* outer-space */
-    --secondary-color: #343a40ff; /* onyx */
-    --background-color: #f8f9faff; /* seasalt */
-    --text-color: #212529ff; /* eerie-black */
-    --accent-color: #adb5bdff; /* french-gray-2 */
-    --danger-color: #6c757dff; /* slate-gray */
-    --success-color: #ced4daff; /* french-gray */
-    --light-gray: #dee2e6ff; /* platinum */
-    --border-color: #e9ecefff; /* antiflash-white */
+    --federal-blue: #03045eff;
+    --marian-blue: #023e8aff;
+    --honolulu-blue: #0077b6ff;
+    --blue-green: #0096c7ff;
+    --pacific-cyan: #00b4d8ff;
+    --vivid-sky-blue: #48cae4ff;
+    --non-photo-blue: #90e0efff;
+    --non-photo-blue-2: #ade8f4ff;
+    --light-cyan: #caf0f8ff;
+
+    --primary-color: var(--honolulu-blue);
+    --secondary-color: var(--marian-blue);
+    --background-color: var(--light-cyan);
+    --text-color: var(--federal-blue);
+    --accent-color: var(--vivid-sky-blue);
+    --danger-color: #ff6b6b;
+    --success-color: #4ecdc4;
+    --light-gray: var(--non-photo-blue-2);
+    --border-color: var(--non-photo-blue);
 }
 
 * {

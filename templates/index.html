@@ -11,12 +11,12 @@
           <div class="card-body">
             <h3 class="card-title">Financial Summary</h3>
             <p class="card-text">
-              Total Income: $<span id="total-income"></span>
+              Total Income: <span id="total-income"></span>
             </p>
             <p class="card-text">
-              Total Expenses: $<span id="total-expenses"></span>
+              Total Expenses: <span id="total-expenses"></span>
             </p>
-            <p class="card-text">Balance: $<span id="balance"></span></p>
+            <p class="card-text">Balance: <span id="balance"></span></p>
           </div>
         </div>
       </div>
@@ -88,7 +88,7 @@
                 {% for income in incomes %}
                 <tr>
                   <td>{{ income.date.strftime('%Y-%m-%d') }}</td>
-                  <td>${{ "%.2f"|format(income.amount) }}</td>
+                  <td>KSH {{ "%.2f"|format(income.amount) }}</td>
                   <td>{{ income.source }}</td>
                   <td>
                     <a
@@ -141,7 +141,7 @@
                 {% for expense in expenses %}
                 <tr>
                   <td>{{ expense.date.strftime('%Y-%m-%d') }}</td>
-                  <td>${{ "%.2f"|format(expense.amount) }}</td>
+                  <td>KSH {{ "%.2f"|format(expense.amount) }}</td>
                   <td>{{ expense.description }}</td>
                   <td>{{ expense.category.name }}</td>
                   <td>
