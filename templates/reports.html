@@ -1,69 +1,68 @@
 {% extends "base.html" %} {% block title %}Financial Reports{% endblock %} {%
 block content %}
-<div class="container mt-4">
-  <h1><i data-feather="bar-chart-2"></i> Financial Reports</h1>
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1><i data-feather="bar-chart-2"></i> Financial Reports</h1>
+  </div>
 
-  <div class="card mb-4">
-    <div class="card-body">
-      <div id="date-range" class="form-inline">
-        <label for="start-date" class="mr-2">Start Date:</label>
-        <input type="date" id="start-date" class="form-control mr-3" />
-        <label for="end-date" class="mr-2">End Date:</label>
-        <input type="date" id="end-date" class="form-control mr-3" />
-        <button id="update-report" class="btn btn-primary">
-          <i data-feather="refresh-cw"></i> Update Report
-        </button>
+  <div class="dashboard-card date-range-card">
+    <h3><i data-feather="calendar"></i> Date Range</h3>
+    <div id="date-range">
+      <input
+        type="date"
+        id="start-date"
+        class="form-control"
+        placeholder="Start Date"
+      />
+      <input
+        type="date"
+        id="end-date"
+        class="form-control"
+        placeholder="End Date"
+      />
+      <button id="update-report" class="btn btn-primary">
+        <i data-feather="refresh-cw"></i> Update Report
+      </button>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="dashboard-card summary-card">
+      <h3><i data-feather="clipboard"></i> Summary</h3>
+      <div id="summary" class="summary-content">
+        <p>Total Income: <span id="report-total-income"></span></p>
+        <p>Total Expenses: <span id="report-total-expenses"></span></p>
+        <p>Net Income: <span id="report-net-income"></span></p>
+      </div>
+    </div>
+    <div class="dashboard-card">
+      <h3><i data-feather="pie-chart"></i> Expenses by Category</h3>
+      <div class="chart-container">
+        <canvas id="expense-category-chart"></canvas>
       </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-6">
-      <div class="card mb-4">
-        <div class="card-body">
-          <div id="summary">
-            <h2><i data-feather="clipboard"></i> Summary</h2>
-            <p>Total Income: <span id="report-total-income"></span></p>
-            <p>Total Expenses: <span id="report-total-expenses"></span></p>
-            <p>Net Income: <span id="report-net-income"></span></p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="card mb-4">
-        <div class="card-body">
-          <div class="chart-container">
-            <canvas id="expense-category-chart"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-body">
-      <h2><i data-feather="list"></i> Transactions</h2>
-      <div class="table-responsive">
-        <table id="transactions" class="table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Type</th>
-              <th>Amount</th>
-              <th>Description</th>
-              <th>Category</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Transactions will be populated here by JavaScript -->
-          </tbody>
-        </table>
-      </div>
+  <div class="dashboard-card">
+    <h3><i data-feather="list"></i> Transactions</h3>
+    <div class="table-responsive">
+      <table id="transactions" class="table table-sm">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Transactions will be populated here by JavaScript -->
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -143,6 +142,7 @@ block content %}
             },
             options: {
               responsive: true,
+              maintainAspectRatio: false,
               title: {
                 display: true,
                 text: "Expenses by Category (KSH)",
